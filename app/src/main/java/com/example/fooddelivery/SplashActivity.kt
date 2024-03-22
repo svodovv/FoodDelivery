@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -32,6 +33,7 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
+
 
         setContent {
             FoodDeliveryTheme {
@@ -51,6 +53,7 @@ private fun SplashScreen(splashActivity: SplashActivity) {
         val intent = Intent(splashActivity, MainActivity::class.java)
         splashActivity.startActivity(intent)
         splashActivity.finish()
+        splashActivity.stopLockTask()
     }, 2200)
 
 

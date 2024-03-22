@@ -116,13 +116,10 @@ fun FoodDeliveryTheme(
         val activity = LocalContext.current as? Activity
         SideEffect {
             val window = (view.context as Activity).window
-            if (activity is SplashActivity){
-                window.statusBarColor = Color(0xFFF15412).toArgb()
-            }
-            else
-            window.statusBarColor = Color.Transparent.toArgb()
 
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            if (activity is SplashActivity) window.statusBarColor = Color(0xFFF15412).toArgb()
+            else window.statusBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

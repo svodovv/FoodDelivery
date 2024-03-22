@@ -3,6 +3,7 @@ package com.example.fooddelivery.domain.model
 import com.google.gson.annotations.SerializedName
 
 data class ProductMenuModel(
+    val categoryId: Int,
     val name: String,
     val priceCurrent: Int,
     val priceOld: Int?,

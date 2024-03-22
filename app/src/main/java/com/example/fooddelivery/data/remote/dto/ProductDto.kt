@@ -33,6 +33,7 @@ fun ProductDto.toProductMenuModel(): ProductMenuModel {
     val priceCurrent = priceCurrent / 100
     val priceOld = priceOld?.div(100)
     return ProductMenuModel(
+        categoryId = categoryId,
         name = name,
         priceCurrent = priceCurrent,
         priceOld = priceOld,

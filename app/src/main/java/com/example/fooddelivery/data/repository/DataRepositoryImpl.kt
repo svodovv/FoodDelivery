@@ -11,17 +11,23 @@ import javax.inject.Inject
 
 class DataRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
-){
+) {
     private val productListType: Type = object : TypeToken<List<ProductDto>>() {}.type
     private val categoriesListType: Type = object : TypeToken<List<CategoriesDto>>() {}.type
 
-    fun getProductList() =  JsonDataProvider(context)
-        .loadJsonDataList<ProductDto>(
+    fun getProductList(): List<ProductDto> {
+        val listProduct =JsonDataProvider(context).loadJsonDataList<ProductDto>(
             resId = R.raw.r_products, productListType
         )
+        return listProduct.sortedBy { it.categoryId }
+    }
 
-    fun getCategoriesList() = JsonDataProvider(context)
-        .loadJsonDataList<CategoriesDto>(
-            R.raw.r_categories, categoriesListType
-        )
+    fun getCategoriesList(): List<CategoriesDto> {
+        val listCategories = JsonDataProvider(context)
+            .loadJsonDataList<CategoriesDto>(
+                R.raw.r_categories, categoriesListType
+            )
+        return listCategories.sortedBy { it.id }
+
+    }
 }
