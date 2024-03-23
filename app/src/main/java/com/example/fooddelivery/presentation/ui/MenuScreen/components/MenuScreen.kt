@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.MenuScreen.MenuViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,12 +57,16 @@ fun MenuScreen(
     val categoriesId = remember {
         mutableIntStateOf(0)
     }
+    val indexButtonInRow = remember {
+        mutableIntStateOf(0)
+    }
 
     LaunchedEffect(key1 = Unit) {
         snapshotFlow { menuState.productList[categoriesId.intValue].categoryId }.collect { id ->
             val indexInCategories = menuState.categoriesList.indexOfFirst { it.id == id }
+            indexButtonInRow.intValue = id
             lazyRowState.animateScrollToItem(indexInCategories)
-            Log.e("index", indexInCategories.toString())
+
         }
     }
     Column(
@@ -85,14 +90,16 @@ fun MenuScreen(
                         coroutineScope.launch {
                             val index =
                                 menuState.productList.indexOfFirst { it.categoryId == categoriesList.id }
-                            lazyGridState.animateScrollToItem(index)
+                            delay(100)
+                            lazyGridState.scrollToItem(index)
+
                         }
                     },
                     Modifier.padding(end = 8.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor =
-                        if (categoriesId.intValue == categoriesList.id) {
+                        if (indexButtonInRow.intValue == categoriesList.id) {
                             Color(0xFFF15412)
                         } else Color.Transparent
                     )
