@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FoodDelivery</string>
+    <string name="Energ_chen">Энерг. ценность</string>
+    <string name="measure">Вес</string>
+    <string name="protein">Белки</string>
+    <string name="fat">Жиры</string>
+    <string name="carbon">Углеводы</string>
+    <string name="In_to_the_basket">В коризну за %1$s</string>
 </resources>

@@ -28,8 +28,13 @@ val Typography = Typography(
     ),
     displayMedium = TextStyle(
         fontFamily = roboto,
-        fontWeight = FontWeight.Bold,
-        fontSize = 26.sp
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = roboto,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = roboto,

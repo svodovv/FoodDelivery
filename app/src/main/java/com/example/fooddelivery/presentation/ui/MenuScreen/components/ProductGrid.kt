@@ -1,6 +1,7 @@
 package com.example.fooddelivery.presentation.ui.MenuScreen.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.MenuScreen.MenuState
+import com.omgupsapp.presentation.navigation.Screen
 
 @Composable
 fun ProductGrid(
@@ -52,19 +54,29 @@ fun ProductGrid(
                     .width(167.5.dp),
             ) {
                 Column {
-                    Box {
-                        Image(
-                            painter = painterResource(id = R.drawable.i_eat),
-                            contentDescription = "Eat image }",
-                            modifier = Modifier
-
-                        )
-                    }
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.Start)
+                            .clickable {
+                                navController.navigate(
+                                    Screen.MenuScreen.route + "/{itemId}".replace(
+                                        oldValue = "{itemId}",
+                                        newValue = product.id.toString()
+                                    )
+                                )
+                            }
+
                     ) {
+                        Box {
+                            Image(
+                                painter = painterResource(id = R.drawable.i_eat),
+                                contentDescription = "Eat image }",
+                                modifier = Modifier
+
+                            )
+                        }
+
                         Text(
                             text = product.name,
                             modifier = Modifier.padding(
@@ -81,35 +93,38 @@ fun ProductGrid(
                             ),
                             color = Color.Gray
                         )
-                        Button(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                                .padding(12.dp)
-                                .weight(1f),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text(
-                                text = "${product.priceCurrent} ₽",
-                                color = Color.Black,
-                                style = MaterialTheme.typography.bodyMedium
 
+                    }
+
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                            .padding(12.dp)
+                            .weight(1f),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = "${product.priceCurrent} ₽",
+                            color = Color.Black,
+                            style = MaterialTheme.typography.bodyMedium
+
+                        )
+                        if (product.priceOld != null) {
+                            Text(
+                                text = "${product.priceOld} ₽",
+                                color = Color.Gray,
+                                style = TextStyle(textDecoration = TextDecoration.LineThrough),
+                                modifier = Modifier
+                                    .align(Alignment.Bottom)
+                                    .padding(start = 8.dp),
+                                textAlign = TextAlign.End
                             )
-                            if (product.priceOld != null) {
-                                Text(
-                                    text = "${product.priceOld} ₽",
-                                    color = Color.Gray,
-                                    style = TextStyle(textDecoration = TextDecoration.LineThrough),
-                                    modifier = Modifier
-                                        .align(Alignment.Bottom)
-                                        .padding(start = 8.dp),
-                                    textAlign = TextAlign.End
-                                )
-                            }
                         }
                     }
                 }
+
             }
         }
     }

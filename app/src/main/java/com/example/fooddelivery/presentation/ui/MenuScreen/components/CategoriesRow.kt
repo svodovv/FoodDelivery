@@ -1,9 +1,12 @@
 package com.example.fooddelivery.presentation.ui.MenuScreen.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,15 +29,14 @@ fun CategoriesRow(
     menuState: MenuState,
     modifier: Modifier,
     coroutineScope: CoroutineScope,
-    lazyGridState: LazyListState,
-    indexButtonInRow: MutableIntState
+    lazyGridState: LazyGridState,
+    indexButtonInRow: MutableIntState,
 ) {
     LazyRow(
         state = lazyRowState,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
-
     ) {
         items(menuState.categoriesList) { categoriesList ->
 
@@ -42,22 +44,28 @@ fun CategoriesRow(
                 onClick = {
                     coroutineScope.launch {
                         val index =
-                            menuState.productList.indexOfFirst { it.categoryId == categoriesList.id }
+                            menuState.categoriesList.indexOfFirst { it.id == categoriesList.id }
                         delay(100)
-                        lazyGridState.scrollToItem(index)
+                        if (menuState.productList[index].name.isNotBlank()) {
+                            Log.e("Name", menuState.categoriesList[index].name)
+                            lazyGridState.scrollToItem(index)
+                            indexButtonInRow.intValue= index
+                            lazyRowState.animateScrollToItem(index)
 
+
+                        }
                     }
                 },
                 Modifier.padding(end = 8.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (indexButtonInRow.intValue == categoriesList.id) {
+                    containerColor = if (menuState.categoriesList[indexButtonInRow.intValue].id == categoriesList.id)
                         Color(0xFFF15412)
-                    } else Color.Transparent
+                    else Color.Transparent
+
                 )
             ) {
                 Text(text = categoriesList.name, color = Color.Black)
-
             }
         }
     }

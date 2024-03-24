@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.omgupsapp.presentation.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +43,7 @@ fun TopAppBarComposable(
             }
         },
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { navController.navigate(Screen.SearchProductScreen.route)}) {
                 Image(
                     painter = painterResource(id = R.drawable.top_app_bar_search),
                     contentDescription = "top app bar search"

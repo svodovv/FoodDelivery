@@ -40,12 +40,16 @@ fun MenuScreen(
         mutableIntStateOf(0)
     }
 
+    /*
+    Вызываеться только при пролистывании LazyGrid
+    Когда мы вращаем список, изменяем индекст отображаемой кнопки в Row
+    а также перелистываем до этой кнопки
+    */
     LaunchedEffect(key1 = Unit) {
-        snapshotFlow { menuState.productList[categoriesId.intValue].categoryId }.collect { id ->
-            val indexInCategories = menuState.categoriesList.indexOfFirst { it.id == id }
-            indexButtonInRow.intValue = id
+        snapshotFlow { menuState.productList[categoriesId.intValue].categoryId }.collect { categoriesId ->
+            val indexInCategories = menuState.categoriesList.indexOfFirst { it.id == categoriesId }
+            indexButtonInRow.intValue = indexInCategories
             lazyRowState.animateScrollToItem(indexInCategories)
-
         }
     }
     Column(
@@ -56,6 +60,9 @@ fun MenuScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        /*
+              LazyRow в котором можно переходить по наименованиям блюд
+              */
         CategoriesRow(
             lazyRowState = lazyRowState,
             menuState = menuState,
@@ -64,10 +71,13 @@ fun MenuScreen(
                 .padding(start = 16.dp)
                 .align(Alignment.Start),
             coroutineScope = coroutineScope,
-            lazyGridState = lazyRowState,
-            indexButtonInRow = indexButtonInRow
-        )
+            lazyGridState = lazyGridState,
+            indexButtonInRow = indexButtonInRow,
 
+            )
+        /*
+             LazyGrid в котором содержиться весь список блюд
+          */
         ProductGrid(
             lazyGridState = lazyGridState,
             menuState = menuState,

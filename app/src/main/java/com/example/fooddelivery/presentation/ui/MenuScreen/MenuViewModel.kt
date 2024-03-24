@@ -23,7 +23,7 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun getProductList(){
-    val productList = productUserCase.getProductList()
+    val productList = productUserCase.getProductMenu()
         _menuState.value = menuState.value.copy(productList = productList)
     }
 

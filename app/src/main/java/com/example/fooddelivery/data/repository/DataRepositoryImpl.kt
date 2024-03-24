@@ -16,18 +16,18 @@ class DataRepositoryImpl @Inject constructor(
     private val categoriesListType: Type = object : TypeToken<List<CategoriesDto>>() {}.type
 
     fun getProductList(): List<ProductDto> {
-        val listProduct =JsonDataProvider(context).loadJsonDataList<ProductDto>(
+        val listProduct = JsonDataProvider(context).loadJsonDataList<ProductDto>(
             resId = R.raw.r_products, productListType
         )
         return listProduct.sortedBy { it.categoryId }
     }
 
     fun getCategoriesList(): List<CategoriesDto> {
-        val listCategories = JsonDataProvider(context)
-            .loadJsonDataList<CategoriesDto>(
+        val listCategories = JsonDataProvider(context).loadJsonDataList<CategoriesDto>(
                 R.raw.r_categories, categoriesListType
             )
         return listCategories.sortedBy { it.id }
 
     }
+
 }

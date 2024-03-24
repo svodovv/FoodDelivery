@@ -2,14 +2,12 @@ package com.omgupsapp.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.components.ProductDescriptionScreen
 import com.example.fooddelivery.presentation.ui.MenuScreen.components.MenuScreen
+import com.example.fooddelivery.presentation.ui.SearchProduct.components.SearchProductScreen
 
 
 @Composable
@@ -26,9 +24,19 @@ fun NavHostComposable(
         composable(route = Screen.MenuScreen.route){
            MenuScreen(navController = navController, paddingValues = paddingValues)
         }
+        composable(route = Screen.MenuScreen.route + "/{itemId}"){ navBackStackEntry ->
+            val itemId = navBackStackEntry.arguments?.getString("itemId")
+            itemId?.let {
+                ProductDescriptionScreen(id = itemId.toInt(), navController = navController)
+            }
+        }
+        composable(route = Screen.SearchProductScreen.route){
+            SearchProductScreen(navController = navController, paddingValues)
+        }
     }
 }
 
 sealed class Screen(val route: String) {
     object MenuScreen: Screen("menu_screen")
+    object SearchProductScreen: Screen("search_product_screen")
 }
