@@ -1,6 +1,5 @@
 package com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,11 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.ProductDescriptionViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDescriptionScreen(
     navController: NavController, id: Int, viewModel: ProductDescriptionViewModel = hiltViewModel()
@@ -45,25 +44,11 @@ fun ProductDescriptionScreen(
 
 
     Column {
-        Box(
-            modifier = Modifier
-                .weight(0.9f)
-                .wrapContentSize()
-                .background(Color(0x08000000)),
-            contentAlignment = Alignment.Center
-        ) {
-
-            Image(painter = painterResource(id = R.drawable.backinproductdescription),
-                contentDescription = "back arrow in product description",
-                modifier = Modifier
-                    .clickable {
-                        Log.e("CLICKABLE", "TRUE")
-                        navController.popBackStack()
-                    }
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
-                   )
-
+        Box(modifier = Modifier
+            .weight(0.9f)
+            .wrapContentSize()
+            .clickable(enabled = false) { }
+            .background(Color(0x08000000)), contentAlignment = Alignment.Center) {
 
 
             LazyColumn(
@@ -120,6 +105,16 @@ fun ProductDescriptionScreen(
                 }
 
             }
+
+            Image(painter = painterResource(id = R.drawable.backinproductdescription),
+                contentDescription = "back arrow in product description",
+                modifier = Modifier
+                    .clickable {
+                        navController.popBackStack()
+                    }
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+            )
         }
         Box(modifier = Modifier.weight(0.1f)) {
             Button(

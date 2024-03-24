@@ -32,7 +32,8 @@ fun ProductDto.toProductMenuModel(): ProductMenuModel {
         priceOld = priceOld,
         image = image,
         measure = measure,
-        measureUnit = measureUnit
+        measureUnit = measureUnit,
+        tagIds = tagIds
     )
 }
 

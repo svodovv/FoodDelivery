@@ -1,11 +1,8 @@
-@file:Suppress("DEPRECATION")
-
-package com.example.fooddelivery.presentation.scaffold
+package com.example.fooddelivery.presentation.ui.SearchProduct.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -13,32 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Recomposer.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.presentation.ui.SearchProduct.SearchProductState
 import com.example.fooddelivery.presentation.ui.SearchProduct.SearchProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTopAppBar(
-    navController: NavController, searchProductViewModel: SearchProductViewModel = hiltViewModel()
-) {
+fun TopAppBarInSearchScreen (
+    navController: NavController ,
+    searchProductViewModel: SearchProductViewModel
+){
 
-
-    val inputText = searchProductViewModel.searchProductState.value?.inputText
-
+    val searchProductList = searchProductViewModel.searchProductState
     TopAppBar(title = {
-        OutlinedTextField(value = inputText ?: "",
+        OutlinedTextField(value = searchProductList.value.inputText ?: "",
             onValueChange = { searchProductViewModel.onChangeInputSearch(it) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             colors = OutlinedTextFieldDefaults.colors(
@@ -51,7 +44,7 @@ fun SearchTopAppBar(
                 cursorColor = Color.Transparent,
 
 
-            ),
+                ),
             textStyle = MaterialTheme.typography.displayMedium,
             modifier = Modifier.fillMaxWidth().padding(),
             singleLine = true,
@@ -68,7 +61,7 @@ fun SearchTopAppBar(
                 }
             },
             trailingIcon = {
-                if (inputText?.isNotBlank() == true) {
+                if (searchProductList.value.inputText.isNotBlank()) {
                     IconButton(onClick = {
                         searchProductViewModel.deleteInputText()
                     }, ) {
@@ -80,4 +73,5 @@ fun SearchTopAppBar(
                 }
             })
     })
+
 }

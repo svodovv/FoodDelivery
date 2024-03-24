@@ -2,7 +2,6 @@ package com.example.fooddelivery.presentation.ui.MenuScreen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.fooddelivery.presentation.ui.MenuScreen.MenuViewModel
+import com.omgupsapp.presentation.scaffold.TopAppBarComposable
 
 @Composable
 fun MenuScreen(
-    paddingValues: PaddingValues,
     navController: NavHostController,
     menuViewModel: MenuViewModel = hiltViewModel(),
 ) {
@@ -33,7 +32,7 @@ fun MenuScreen(
     val lazyRowState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    val categoriesId = remember {
+    val gridItemIndex = remember {
         mutableIntStateOf(0)
     }
     val indexButtonInRow = remember {
@@ -46,26 +45,37 @@ fun MenuScreen(
     а также перелистываем до этой кнопки
     */
     LaunchedEffect(key1 = Unit) {
-        snapshotFlow { menuState.productList[categoriesId.intValue].categoryId }.collect { categoriesId ->
-            val indexInCategories = menuState.categoriesList.indexOfFirst { it.id == categoriesId }
+        snapshotFlow { menuState.productList[gridItemIndex.intValue] }.collect { product ->
+            val indexInCategories = menuState.categoriesList.indexOfFirst {
+                it.id == product.categoryId
+            }
             indexButtonInRow.intValue = indexInCategories
             lazyRowState.animateScrollToItem(indexInCategories)
         }
     }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+
         /*
-              LazyRow в котором можно переходить по наименованиям блюд
-              */
+        coroutineScope и lazyGridState передаю для того,
+        чтобы можно было по клику на иконку перейти к началу grid
+         */
+        TopAppBarComposable(
+            navController = navController,
+            lazyGridState = lazyGridState,
+            coroutineScope = coroutineScope
+        )/*
+            LazyRow в котором можно переходить по категориям блюд
+            */
         CategoriesRow(
             lazyRowState = lazyRowState,
-            menuState = menuState,
+            categoriesList = menuState.categoriesList,
+            productList = menuState.productList,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp)
@@ -74,14 +84,13 @@ fun MenuScreen(
             lazyGridState = lazyGridState,
             indexButtonInRow = indexButtonInRow,
 
-            )
-        /*
+            )/*
              LazyGrid в котором содержиться весь список блюд
           */
         ProductGrid(
             lazyGridState = lazyGridState,
-            menuState = menuState,
-            categoriesId = categoriesId,
+            productList = menuState.productList,
+            gridItemIndex = gridItemIndex,
             navController = navController
         )
     }

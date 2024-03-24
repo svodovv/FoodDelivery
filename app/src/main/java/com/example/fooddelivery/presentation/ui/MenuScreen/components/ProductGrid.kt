@@ -30,14 +30,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
-import com.example.fooddelivery.presentation.ui.MenuScreen.MenuState
+import com.example.fooddelivery.domain.model.ProductMenuModel
 import com.omgupsapp.presentation.navigation.Screen
 
 @Composable
 fun ProductGrid(
     lazyGridState: LazyGridState,
-    menuState: MenuState,
-    categoriesId: MutableIntState,
+    productList: List<ProductMenuModel>,
+    gridItemIndex: MutableIntState?,
     navController: NavController
 ) {
     LazyVerticalGrid(
@@ -45,8 +45,8 @@ fun ProductGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, start = 8.dp, end = 8.dp)
     ) {
-        itemsIndexed(menuState.productList) { index, product ->
-            categoriesId.intValue = index
+        itemsIndexed(productList) { index, product ->
+            gridItemIndex?.intValue = index
             Card(
                 modifier = Modifier
                     .padding(8.dp)
@@ -54,21 +54,26 @@ fun ProductGrid(
                     .width(167.5.dp),
             ) {
                 Column {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.Start)
-                            .clickable {
-                                navController.navigate(
-                                    Screen.MenuScreen.route + "/{itemId}".replace(
-                                        oldValue = "{itemId}",
-                                        newValue = product.id.toString()
-                                    )
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Start)
+                        .clickable {
+                            navController.navigate(
+                                Screen.MenuScreen.route + "/{itemId}".replace(
+                                    oldValue = "{itemId}", newValue = product.id.toString()
                                 )
-                            }
+                            )
+                        }
 
                     ) {
                         Box {
+
+                            Tag(
+                                product.tagIds,
+                                modifier = Modifier.padding(8.dp),
+                                saleTag = product.priceOld != null
+                            )
+
                             Image(
                                 painter = painterResource(id = R.drawable.i_eat),
                                 contentDescription = "Eat image }",
@@ -124,7 +129,6 @@ fun ProductGrid(
                         }
                     }
                 }
-
             }
         }
     }

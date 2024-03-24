@@ -11,4 +11,5 @@ data class ProductMenuModel(
     val image: String,
     val measure: Int,
     val measureUnit: String,
+    val tagIds: List<Int>
 )

@@ -6,4 +6,6 @@
     <string name="fat">Жиры</string>
     <string name="carbon">Углеводы</string>
     <string name="In_to_the_basket">В коризну за %1$s</string>
+    <string name="insert_product_name">Введите название блюда, которое ищите</string>
+    <string name="search_product_is_empty">Ничего не нашлось :(</string>
 </resources>

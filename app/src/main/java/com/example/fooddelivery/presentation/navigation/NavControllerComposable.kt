@@ -12,8 +12,7 @@ import com.example.fooddelivery.presentation.ui.SearchProduct.components.SearchP
 
 @Composable
 fun NavHostComposable(
-    navController: NavHostController,
-    paddingValues: PaddingValues
+    navController: NavHostController
 ) {
 
     val startDestination = Screen.MenuScreen.route
@@ -22,7 +21,7 @@ fun NavHostComposable(
         navController = navController, startDestination = startDestination
     ) {
         composable(route = Screen.MenuScreen.route){
-           MenuScreen(navController = navController, paddingValues = paddingValues)
+           MenuScreen(navController = navController)
         }
         composable(route = Screen.MenuScreen.route + "/{itemId}"){ navBackStackEntry ->
             val itemId = navBackStackEntry.arguments?.getString("itemId")
@@ -31,7 +30,7 @@ fun NavHostComposable(
             }
         }
         composable(route = Screen.SearchProductScreen.route){
-            SearchProductScreen(navController = navController, paddingValues)
+            SearchProductScreen(navController = navController)
         }
     }
 }
