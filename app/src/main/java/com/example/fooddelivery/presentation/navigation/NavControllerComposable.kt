@@ -2,9 +2,11 @@ package com.omgupsapp.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.components.ProductDescriptionScreen
 import com.example.fooddelivery.presentation.ui.MenuScreen.components.MenuScreen
 import com.example.fooddelivery.presentation.ui.SearchProduct.components.SearchProductScreen
