@@ -27,10 +27,7 @@ class SearchProductViewModel @Inject constructor(
 
     fun onChangeInputSearch(inputText: String) {
         _searchProductState.value = _searchProductState.value.copy(inputText = inputText)
-
-        Log.e("inputText", searchProductState.value.inputText)
         searchProduct(searchProductState.value.inputText)
-        Log.e("productList", searchProductState.value.productList.toString())
 
     }
 

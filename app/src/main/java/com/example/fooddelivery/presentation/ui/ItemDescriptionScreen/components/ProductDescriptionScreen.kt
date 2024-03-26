@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,30 +28,37 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.ProductDescriptionViewModel
-import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartState
 import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
 
 @Composable
 fun ProductDescriptionScreen(
     navController: NavController,
     id: Int,
-    shoppingCartState: ShoppingCartState,
     productMenuViewModel: ProductDescriptionViewModel = hiltViewModel(),
+    shoppingCartViewModel: ShoppingCartViewModel
 ) {
     productMenuViewModel.getItemInfo(id)
+
     val productInfo = productMenuViewModel.productInfo.value.productInfo
+    val shoppingCartState =
+        shoppingCartViewModel.productsToShoppingCartState.collectAsStateWithLifecycle()
+
+
     val list = listOf(productInfo)
 
 
     Column {
-        Box(modifier = Modifier
-            .weight(0.9f)
-            .wrapContentSize()
-            .background(Color(0x08000000)),
-            contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .weight(0.9f)
+                .wrapContentSize()
+                .background(Color(0x08000000)),
+            contentAlignment = Alignment.Center
+        ) {
 
 
             LazyColumn(
@@ -121,7 +127,20 @@ fun ProductDescriptionScreen(
         }
         Box(modifier = Modifier.weight(0.1f)) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    val quantity = shoppingCartState.value
+                        .mapProductIdTiPairPriceQuantity[id]
+                        ?.second
+                    shoppingCartViewModel.updateProductList(
+                        Triple(
+                            id, productInfo.priceCurrent, third =
+                                if (quantity == null){
+                                    1
+                                }else quantity + 1
+                        )
+                    )
+                    navController.popBackStack()
+                },
                 Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

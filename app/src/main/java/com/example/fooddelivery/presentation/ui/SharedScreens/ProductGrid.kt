@@ -46,11 +46,9 @@ fun ProductGrid(
         modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, start = 8.dp, end = 8.dp)
             .background(Color(0x05000000)),
 
-    ) {
+        ) {
         itemsIndexed(productList) { index, product ->
-            val productQuantity = remember {
-                mutableIntStateOf(0)
-            }
+
             gridItemIndex?.intValue = index
             Card(
                 modifier = Modifier
@@ -58,7 +56,7 @@ fun ProductGrid(
                     .height(290.dp)
                     .width(167.5.dp),
 
-            ) {
+                ) {
                 Column {
                     Column(modifier = Modifier
                         .fillMaxWidth()
@@ -115,7 +113,6 @@ fun ProductGrid(
                         priceCurrent = product.priceCurrent,
                         priceOld = product.priceOld,
                         productId = product.id,
-                        productQuantity = productQuantity,
                         shoppingCartViewModel = shoppingCartViewModel,
                         modifier = Modifier
                             .fillMaxWidth()

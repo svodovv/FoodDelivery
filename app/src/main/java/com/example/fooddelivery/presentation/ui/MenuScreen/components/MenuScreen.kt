@@ -1,18 +1,13 @@
 package com.example.fooddelivery.presentation.ui.MenuScreen.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,7 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.fooddelivery.presentation.ui.MenuScreen.MenuViewModel
-import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartState
+import com.example.fooddelivery.presentation.ui.SharedScreens.ButtonToShopCart
 import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
 import com.omgupsapp.presentation.scaffold.TopAppBarComposable
 
@@ -49,7 +44,7 @@ fun MenuScreen(
     shoppingCartViewModel: ShoppingCartViewModel
 ) {
     val menuState = menuViewModel.menuState.value
-    val shoppingCartState by shoppingCartViewModel.shoppingCartState.collectAsStateWithLifecycle()
+    val shoppingCartState by shoppingCartViewModel.productsToShoppingCartState.collectAsStateWithLifecycle()
     val lazyGridState = rememberLazyGridState()
     val lazyRowState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -116,8 +111,7 @@ fun MenuScreen(
             productList = menuState.productList,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp, start = 16.dp)
-               ,
+                .padding(bottom = 8.dp, start = 16.dp),
             coroutineScope = coroutineScope,
             lazyGridState = lazyGridState,
             indexButtonInRow = indexButtonInRow,
@@ -126,7 +120,6 @@ fun MenuScreen(
         Box(
             modifier = Modifier
                 .weight(0.9f)
-                .wrapContentSize()
         ) {
             /*
              LazyGrid в котором содержиться весь список блюд
@@ -147,11 +140,13 @@ fun MenuScreen(
                     )
                 }
             } else {
-                ProductGrid(lazyGridState = lazyGridState,
+                ProductGrid(
+                    lazyGridState = lazyGridState,
                     productList = menuState.productList,
                     gridItemIndex = gridItemIndex,
                     navController = navController,
-                    shoppingCartViewModel =  shoppingCartViewModel)
+                    shoppingCartViewModel = shoppingCartViewModel
+                )
 
             }
             if (isSheetOpen) {
@@ -166,20 +161,10 @@ fun MenuScreen(
         }
         if (shoppingCartState.price > 0) {
             Box(modifier = Modifier.weight(0.1f)) {
-                Button(
-                    onClick = { /*TODO*/ },
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp
-                        ),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFFF15412))
-                ) {
-                    Text(
-                        text = "В корзину за ${shoppingCartState.price}" + " ₽"
+                ButtonToShopCart(
+                    price = shoppingCartState.price,
+                    navController = navController
                     )
-                }
             }
         }
     }

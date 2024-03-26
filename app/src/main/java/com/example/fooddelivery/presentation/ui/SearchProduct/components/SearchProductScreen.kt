@@ -1,16 +1,11 @@
 package com.example.fooddelivery.presentation.ui.SearchProduct.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +22,7 @@ import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.MenuScreen.components.ProductGrid
 import com.example.fooddelivery.presentation.ui.SearchProduct.SearchProductViewModel
-import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartState
+import com.example.fooddelivery.presentation.ui.SharedScreens.ButtonToShopCart
 import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
 
 @Composable
@@ -37,7 +32,7 @@ fun SearchProductScreen(
     shoppingCartViewModel: ShoppingCartViewModel
 ) {
     val searchProductList = searchProductViewModel.searchProductState.value
-    val shoppingCartState by shoppingCartViewModel.shoppingCartState.collectAsStateWithLifecycle()
+    val shoppingCartState by shoppingCartViewModel.productsToShoppingCartState.collectAsStateWithLifecycle()
     val rememberLazyGrid = rememberLazyGridState()
 
 
@@ -48,9 +43,11 @@ fun SearchProductScreen(
         TopAppBarInSearchScreen(
             navController = navController, searchProductViewModel = searchProductViewModel
         )
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .weight(0.9f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.9f)
+        ) {
             if (searchProductList.inputText.isEmpty()) {
 
                 Column(
@@ -70,7 +67,7 @@ fun SearchProductScreen(
                 if (searchProductList.productList.isEmpty()) {
 
                     Column(
-
+                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -96,20 +93,10 @@ fun SearchProductScreen(
         }
         if (shoppingCartState.price > 0) {
             Box(modifier = Modifier.weight(0.1f)) {
-                Button(
-                    onClick = { /*TODO*/ },
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp
-                        ),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFFF15412))
-                ) {
-                    Text(
-                        text = "В корзину за ${shoppingCartState.price}" + " ₽"
-                    )
-                }
+                ButtonToShopCart(
+                    price = shoppingCartState.price,
+                    navController = navController
+                )
             }
         }
     }

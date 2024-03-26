@@ -1,6 +1,7 @@
 package com.example.fooddelivery.presentation.ui.ShoppingCart
 
+import com.example.fooddelivery.domain.model.ProductInShopCartModel
+
 data class ShoppingCartState(
-    val price: Int = 0,
-    val mapPriceIdTiPairPriceQuantity: Map<Int,Pair<Int, Int>> = emptyMap()
+    val productList: List<ProductInShopCartModel> = emptyList()
 )

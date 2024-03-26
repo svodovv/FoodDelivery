@@ -1,6 +1,7 @@
 package com.example.fooddelivery.data.remote.dto
 
 import com.example.fooddelivery.domain.model.ProductDescriptionModel
+import com.example.fooddelivery.domain.model.ProductInShopCartModel
 import com.example.fooddelivery.domain.model.ProductMenuModel
 import com.google.gson.annotations.SerializedName
 

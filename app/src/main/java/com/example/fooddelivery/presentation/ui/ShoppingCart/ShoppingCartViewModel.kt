@@ -12,27 +12,34 @@ import javax.inject.Inject
 class ShoppingCartViewModel @Inject constructor(
     private val productUseCase: ProductUseCase
 ) : ViewModel(){
+    private val _productsToShoppingCartState = MutableStateFlow(ProductsToShppingCartState())
+    val productsToShoppingCartState = _productsToShoppingCartState.asStateFlow()
+
     private val _shoppingCartState = MutableStateFlow(ShoppingCartState())
     val shoppingCartState = _shoppingCartState.asStateFlow()
 
-    fun shoppingCartUpdate(price: Int, map:Map<Int,Pair<Int, Int>>){
-        _shoppingCartState.update { shoppingCartState ->
-            shoppingCartState.copy(price = price, mapPriceIdTiPairPriceQuantity = map)
+    fun getSelectedProduct(keys: Map<Int, Int>){
+        val productList = productUseCase.getProductListInShopCart(keys)
+        _shoppingCartState.update {
+            it.copy(productList = productList)
         }
     }
 
     fun updateProductList(tripeProductIdPriceQuantity: Triple<Int,Int, Int>){
 
-        _shoppingCartState.update {shoppingCartState ->
-            val mapProductIdToQuantity = shoppingCartState.mapPriceIdTiPairPriceQuantity.toMutableMap()
+        _productsToShoppingCartState.update { shoppingCartState ->
+            val mapProductIdToQuantity = shoppingCartState.mapProductIdTiPairPriceQuantity.toMutableMap()
             mapProductIdToQuantity[tripeProductIdPriceQuantity.first] =
                 Pair(tripeProductIdPriceQuantity.second, tripeProductIdPriceQuantity.third)
-            shoppingCartState.copy(mapPriceIdTiPairPriceQuantity = mapProductIdToQuantity)
+
+            val filterMap = mapProductIdToQuantity.filter { it.value.second != 0 }
+
+            shoppingCartState.copy(mapProductIdTiPairPriceQuantity = filterMap)
         }
 
-        _shoppingCartState.update {shoppingCartState ->
+        _productsToShoppingCartState.update { shoppingCartState ->
             var price = 0
-            shoppingCartState.mapPriceIdTiPairPriceQuantity.forEach{
+            shoppingCartState.mapProductIdTiPairPriceQuantity.forEach{
                 price += it.value.first * it.value.second
             }
             shoppingCartState.copy(price = price)

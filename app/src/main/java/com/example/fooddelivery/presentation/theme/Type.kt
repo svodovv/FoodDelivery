@@ -44,8 +44,8 @@ val Typography = Typography(
     ),
     bodySmall = TextStyle(
         fontFamily = roboto,
-        fontWeight = FontWeight.Light,
-        fontSize = 14.sp
+        fontWeight = FontWeight.Black,
+        fontSize = 16.sp
     ),
 
 )

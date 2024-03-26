@@ -1,12 +1,9 @@
 package com.omgupsapp.presentation.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +13,7 @@ import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.components
 import com.example.fooddelivery.presentation.ui.MenuScreen.components.MenuScreen
 import com.example.fooddelivery.presentation.ui.SearchProduct.components.SearchProductScreen
 import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
+import com.example.fooddelivery.presentation.ui.ShoppingCart.components.ShoppingCartScreen
 
 
 @Composable
@@ -34,8 +32,7 @@ fun NavHostComposable(
                     navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
 
                 MenuScreen(
-                    navController = navController,
-                    shoppingCartViewModel = viewModel
+                    navController = navController, shoppingCartViewModel = viewModel
                 )
             }
             composable(route = Screen.MenuScreen.route + "/{itemId}") { navBackStackEntry ->
@@ -43,13 +40,13 @@ fun NavHostComposable(
 
                 val viewModel =
                     navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
-                val state by viewModel.shoppingCartState.collectAsStateWithLifecycle()
+
 
                 itemId?.let {
                     ProductDescriptionScreen(
                         id = itemId.toInt(),
                         navController = navController,
-                        shoppingCartState = state
+                        shoppingCartViewModel = viewModel
                     )
                 }
             }
@@ -58,6 +55,13 @@ fun NavHostComposable(
                     navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
 
                 SearchProductScreen(
+                    navController = navController, shoppingCartViewModel = viewModel
+                )
+            }
+            composable(route = Screen.ShopCartScreen.route) { navBackStackEntry ->
+                val viewModel =
+                    navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
+                ShoppingCartScreen(
                     navController = navController,
                     shoppingCartViewModel = viewModel
                 )
@@ -72,7 +76,6 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
 ): T {
     val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
     val parentEntry = remember(key1 = this) {
-        Log.e("navGraph", navGraphRoute)
         navController.getBackStackEntry(navGraphRoute)
     }
     return hiltViewModel(parentEntry)
@@ -81,5 +84,6 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
 sealed class Screen(val route: String) {
     object MenuScreen : Screen("menu_screen")
     object SearchProductScreen : Screen("search_product_screen")
+    object ShopCartScreen : Screen("shop_cart_screen")
     object NavGroup : Screen("nav_group")
 }
