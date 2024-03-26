@@ -32,14 +32,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.ProductDescriptionViewModel
+import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartState
+import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDescriptionScreen(
-    navController: NavController, id: Int, viewModel: ProductDescriptionViewModel = hiltViewModel()
+    navController: NavController,
+    id: Int,
+    shoppingCartState: ShoppingCartState,
+    productMenuViewModel: ProductDescriptionViewModel = hiltViewModel(),
 ) {
-    viewModel.getItemInfo(id)
-    val productInfo = viewModel.productInfo.value.productInfo
+    productMenuViewModel.getItemInfo(id)
+    val productInfo = productMenuViewModel.productInfo.value.productInfo
     val list = listOf(productInfo)
 
 
@@ -47,8 +51,8 @@ fun ProductDescriptionScreen(
         Box(modifier = Modifier
             .weight(0.9f)
             .wrapContentSize()
-            .clickable(enabled = false) { }
-            .background(Color(0x08000000)), contentAlignment = Alignment.Center) {
+            .background(Color(0x08000000)),
+            contentAlignment = Alignment.Center) {
 
 
             LazyColumn(
@@ -113,8 +117,7 @@ fun ProductDescriptionScreen(
                         navController.popBackStack()
                     }
                     .align(Alignment.TopStart)
-                    .padding(16.dp)
-            )
+                    .padding(16.dp))
         }
         Box(modifier = Modifier.weight(0.1f)) {
             Button(

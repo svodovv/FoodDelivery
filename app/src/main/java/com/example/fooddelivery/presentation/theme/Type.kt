@@ -36,14 +36,16 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
+    //Кнопка в menuList
     bodyMedium = TextStyle(
         fontFamily = roboto,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+        fontSize = 16.sp
     ),
     bodySmall = TextStyle(
         fontFamily = roboto,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp
     ),
+
 )

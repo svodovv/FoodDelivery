@@ -55,7 +55,6 @@ fun CategoriesRow(
                         }
 
                     },
-                    Modifier.padding(end = 8.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (indexButtonInRow != null) {
@@ -63,7 +62,8 @@ fun CategoriesRow(
                                 0xFFF15412
                             )
                             else Color.Transparent
-                        } else Color.Transparent
+                        } else Color.Transparent,
+                        contentColor = Color.White
 
                     )
                 ) {

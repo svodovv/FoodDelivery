@@ -42,8 +42,8 @@ fun TopAppBarComposable(
                     painter = painterResource(id = R.drawable.logo), "logo in top app bar",
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(top = 16.dp)
-                        .height(56.dp)
+                        .padding(top = 8.dp)
+                        .height(48.dp)
                         .clickable {
                             coroutineScope.launch {
                                 lazyGridState.animateScrollToItem(index = 1)
@@ -63,7 +63,7 @@ fun TopAppBarComposable(
                     }
                 },
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp)
+                    .padding(start = 16.dp,)
                     .clickable { onClick() }
             ) {
                 Image(
@@ -75,7 +75,8 @@ fun TopAppBarComposable(
 
         },
         actions = {
-            IconButton(onClick = { navController.navigate(Screen.SearchProductScreen.route) }) {
+            IconButton(onClick =
+            { navController.navigate(Screen.SearchProductScreen.route) },) {
                 Image(
                     painter = painterResource(id = R.drawable.top_app_bar_search),
                     contentDescription = "top app bar search"

@@ -1,15 +1,21 @@
 package com.omgupsapp.presentation.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.example.fooddelivery.presentation.ui.ItemDescriptionScreen.components.ProductDescriptionScreen
 import com.example.fooddelivery.presentation.ui.MenuScreen.components.MenuScreen
 import com.example.fooddelivery.presentation.ui.SearchProduct.components.SearchProductScreen
+import com.example.fooddelivery.presentation.ui.ShoppingCart.ShoppingCartViewModel
 
 
 @Composable
@@ -17,27 +23,63 @@ fun NavHostComposable(
     navController: NavHostController
 ) {
 
-    val startDestination = Screen.MenuScreen.route
 
     NavHost(
-        navController = navController, startDestination = startDestination
+        navController = navController, startDestination = Screen.NavGroup.route
     ) {
-        composable(route = Screen.MenuScreen.route){
-           MenuScreen(navController = navController)
-        }
-        composable(route = Screen.MenuScreen.route + "/{itemId}"){ navBackStackEntry ->
-            val itemId = navBackStackEntry.arguments?.getString("itemId")
-            itemId?.let {
-                ProductDescriptionScreen(id = itemId.toInt(), navController = navController)
+        navigation(startDestination = Screen.MenuScreen.route, route = Screen.NavGroup.route) {
+
+            composable(route = Screen.MenuScreen.route) { navBackStackEntry ->
+                val viewModel =
+                    navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
+
+                MenuScreen(
+                    navController = navController,
+                    shoppingCartViewModel = viewModel
+                )
             }
-        }
-        composable(route = Screen.SearchProductScreen.route){
-            SearchProductScreen(navController = navController)
+            composable(route = Screen.MenuScreen.route + "/{itemId}") { navBackStackEntry ->
+                val itemId = navBackStackEntry.arguments?.getString("itemId")
+
+                val viewModel =
+                    navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
+                val state by viewModel.shoppingCartState.collectAsStateWithLifecycle()
+
+                itemId?.let {
+                    ProductDescriptionScreen(
+                        id = itemId.toInt(),
+                        navController = navController,
+                        shoppingCartState = state
+                    )
+                }
+            }
+            composable(route = Screen.SearchProductScreen.route) { navBackStackEntry ->
+                val viewModel =
+                    navBackStackEntry.sharedViewModel<ShoppingCartViewModel>(navController = navController)
+
+                SearchProductScreen(
+                    navController = navController,
+                    shoppingCartViewModel = viewModel
+                )
+            }
         }
     }
 }
 
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
+    navController: NavHostController
+): T {
+    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+    val parentEntry = remember(key1 = this) {
+        Log.e("navGraph", navGraphRoute)
+        navController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
+}
+
 sealed class Screen(val route: String) {
-    object MenuScreen: Screen("menu_screen")
-    object SearchProductScreen: Screen("search_product_screen")
+    object MenuScreen : Screen("menu_screen")
+    object SearchProductScreen : Screen("search_product_screen")
+    object NavGroup : Screen("nav_group")
 }
