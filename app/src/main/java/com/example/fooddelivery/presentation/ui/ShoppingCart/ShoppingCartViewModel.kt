@@ -1,11 +1,13 @@
 package com.example.fooddelivery.presentation.ui.ShoppingCart
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fooddelivery.domain.use_case.ProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,9 +21,11 @@ class ShoppingCartViewModel @Inject constructor(
     val shoppingCartState = _shoppingCartState.asStateFlow()
 
     fun getSelectedProduct(keys: Map<Int, Int>){
-        val productList = productUseCase.getProductListInShopCart(keys)
-        _shoppingCartState.update {
-            it.copy(productList = productList)
+        viewModelScope.launch {
+            val productList = productUseCase.getProductListInShopCart(keys)
+            _shoppingCartState.update {
+                it.copy(productList = productList)
+            }
         }
     }
 

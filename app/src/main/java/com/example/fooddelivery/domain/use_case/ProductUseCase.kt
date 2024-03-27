@@ -1,5 +1,6 @@
 package com.example.fooddelivery.domain.use_case
 
+import android.util.Log
 import com.example.fooddelivery.data.remote.dto.toProductDescriptionModel
 import com.example.fooddelivery.data.remote.dto.toProductMenuModel
 import com.example.fooddelivery.data.repository.DataRepositoryImpl
@@ -17,11 +18,12 @@ class ProductUseCase @Inject constructor(
 
     private val productListDto = dataRepositoryImpl.getProductList()
 
+
     //По скольку в тегах нет тега "Скидка", вместо id тега тут Boolean
     //И проходиться использовать вот такую карусель с if`ами
     var list = listOf(false, false, false)
 
-    fun getProductMenu(): List<ProductMenuModel> {
+     fun getProductMenu(): List<ProductMenuModel> {
         var productMenu = productListDto.map {
             it.toProductMenuModel()
         }
@@ -37,19 +39,20 @@ class ProductUseCase @Inject constructor(
         return productMenu
     }
 
-    fun getProductInfo(productId: Int): ProductDescriptionModel =
-        productListDto.first { it.id == productId }.toProductDescriptionModel()
+     fun getProductInfo(productId: Int): ProductDescriptionModel {
+        return productListDto.first { it.id == productId }.toProductDescriptionModel()
+    }
 
     suspend fun searchProduct(productName: String): List<ProductMenuModel> {
         val productList = CoroutineScope(Dispatchers.Main).async {
-            return@async productListDto.map {
+           return@async productListDto.map {
                 it.toProductMenuModel()
             }.filter { it.name.lowercase().contains(productName.lowercase()) }
         }
         return productList.await()
     }
 
-    fun getProductListInShopCart(listId: Map<Int, Int>): MutableList<ProductInShopCartModel> {
+     fun getProductListInShopCart(listId: Map<Int, Int>): MutableList<ProductInShopCartModel> {
         val productList = mutableListOf<ProductInShopCartModel>()
         listId.forEach { map ->
             val product = productListDto.firstOrNull { it.id == map.key }

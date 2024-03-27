@@ -14,6 +14,7 @@ import javax.inject.Inject
 class SearchProductViewModel @Inject constructor(
     private val productUseCase: ProductUseCase
 ) : ViewModel() {
+
     private val _searchProductState = mutableStateOf(SearchProductState())
     val searchProductState: State<SearchProductState> = _searchProductState
 

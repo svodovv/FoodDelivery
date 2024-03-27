@@ -45,6 +45,7 @@ fun MenuScreen(
 ) {
     val menuState = menuViewModel.menuState.value
     val shoppingCartState by shoppingCartViewModel.productsToShoppingCartState.collectAsStateWithLifecycle()
+
     val lazyGridState = rememberLazyGridState()
     val lazyRowState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -96,6 +97,15 @@ fun MenuScreen(
     чтобы можно было по клику на иконку перейти к началу grid
      */
 
+        LaunchedEffect(key1 = Unit) {
+            snapshotFlow { menuState.productList[gridItemIndex.intValue] }.collect { product ->
+                val indexInCategories = menuState.categoriesList.indexOfFirst {
+                    it.id == product.categoryId
+                }
+                indexButtonInRow.intValue = indexInCategories
+                lazyRowState.animateScrollToItem(indexInCategories)
+            }
+        }
         TopAppBarComposable(
             navController = navController,
             lazyGridState = lazyGridState,
@@ -118,8 +128,7 @@ fun MenuScreen(
 
             )
         Box(
-            modifier = Modifier
-                .weight(0.9f)
+            modifier = Modifier.weight(0.9f)
         ) {
             /*
              LazyGrid в котором содержиться весь список блюд
@@ -162,10 +171,10 @@ fun MenuScreen(
         if (shoppingCartState.price > 0) {
             Box(modifier = Modifier.weight(0.1f)) {
                 ButtonToShopCart(
-                    price = shoppingCartState.price,
-                    navController = navController
-                    )
+                    price = shoppingCartState.price, navController = navController
+                )
             }
         }
     }
 }
+
